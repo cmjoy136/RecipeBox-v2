@@ -16,12 +16,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-# from RecipeBoxV1 import views
+from RecipeBoxV1 import views
 from RecipeBoxV1.models import Author, RecipeItem
 # from django.conf import settings
 # from django.conf.urls.static import static
-
-from RecipeBoxV1.views import index, read_recipe, recipeaddview, authoraddview
 
 
 admin.site.register(Author)
@@ -29,13 +27,14 @@ admin.site.register(RecipeItem)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index, name='homepage'),
-    # path('recipes/<int:id>/', read_recipe, name='recipe_list'),
-    # path('authors/<int:id>/', views.authors_info, name='authors_page'),
-
-    path('addrecipe/', recipeaddview),
-    path('addauthor/', authoraddview)
-    path('login/', views.login_view, name='login')
+    path('', views.index, name='homepage'),
+    path('recipes/<int:id>/', views.read_recipe, name='recipe_list'),
+    path('authors/<int:id>/', views.author_view, name='authors_page'),
+    path('addrecipe/', views.recipeaddview),
+    path('addauthor/', views.addauthorview),
+    path('editrecipe/<int:id>/', views.recipe_edit_view),
+    path('favoriterecipe/<int:id>/', views.favorite_recipe),
+    path('unfavoriterecipe/<int:id>/', views.unfavorite_recipe),
+    path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout')
-
 ]

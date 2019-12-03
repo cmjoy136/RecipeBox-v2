@@ -1,5 +1,10 @@
 {% for item in data %}
 <h3>{{item.title}}, by <a href="/authors/{{item.author.id}}">{{ item.author.name}}</a></h3>
+<h2><a href="/editrecipe/{{item.id}}"><button>eddit item</button></a> </h2>
+{% if user.isauthenticated %}
+<h2><a href="/favoriterecipe/{{item.id}}"><button>Favorite</button></a></h2>
+<h2><a href="/unfavoriterecipe/{{item.id}}"><button>Unfavorite</button></a></h2>
+{% endif %}
 <div>{{item.body}}
 </div>
 <div></div>

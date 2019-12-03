@@ -1,12 +1,21 @@
 <a href='/'>Home</a>
-{% for item in data %}
 
-<h2> {{ item.name }}</h2>
+
+<h2> {{ author.name }}</h2>
 <div>
     <h3>New Author</h3>
-    {{item.bio}}
+    {{author.bio}}
 </div>
-{% endfor %}
+<div>
+    <h3>Favorites</h3>
+    
+    {% for favorite in favorites %}
+    <ul>
+        <li><a href="/recipes/{{favorite.id}}">{{favorite.title}}</a></li>
+    </ul>
+    {% endfor %}
+</div>
+
 <h3>
     List of Recipes
 </h3>

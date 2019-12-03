@@ -1,11 +1,13 @@
 <h1>Recipes for the holidays</h1>
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-Porro, magnam facilis culpa totam neque aliquam quibusdam! 
-Similique deleniti quisquam ut tenetur iure dolor, eligendi 
-adipisci, neque expedita quos unde sit.
+<p>
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+    Porro, magnam facilis culpa totam neque aliquam quibusdam! 
+    Similique deleniti quisquam ut tenetur iure dolor, eligendi 
+    adipisci, neque expedita quos unde sit.
+</p>
 
-
+You are {{user.username}}
 <ul>
     {% for item in data %}
         <li><a href='recipes/{{item.id}}/'>{{ item.title }}</a>, by <a

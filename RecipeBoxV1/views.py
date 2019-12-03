@@ -29,14 +29,15 @@ def read_recipe(request, id):
     recipe_data = RecipeItem.objects.filter(id=id)
     return render(request, recipe_html, {'data': recipe_data})
 
-
+@login_required
 def author_view(request, id):
-    author_html = 'authors.html'
-    author = Author.objects.filter(id=id)
+    author_html = 'author.html'
+    author = Author.objects.filter(id=id).first()
     recipes = RecipeItem.objects.filter(author=id)
+    favorites = author.favorites.all()
 
 
-    return render(request, author_html, {'data': author, 'recipes': recipes})
+    return render(request, author_html, {'author': author, 'recipes': recipes, 'favorites': favorites})
 
 
 @login_required
@@ -57,7 +58,6 @@ def addauthorview(request):
     form = AuthorAddForm()
 
     return render(request, html, {'form': form})
-
 
 
 @login_required
@@ -84,7 +84,53 @@ def recipeaddview(request):
     return render(request, html, {'form': form})
     print()
 
+def favorite_recipe(request, id):
+    currentuser = request.user.author
+    recipe = RecipeItem.objects.get(id=id)
+    currentuser.favorites.add(recipe)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def unfavorite_recipe(request, id):
+    currentuser = request.user.author
+    recipe = RecipeItem.objects.get(id=id)
+    currentuser.favorites.remove(recipe)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+@login_required
+def recipe_edit_view(request, id):
+    html = "generic_form.html"
+    user_author = request.user
+    instance = RecipeItem.objects.get(id=id)
+    form = RecipeItemAddForm(request.POST or None, instance=instance)
+
+    if form.is_valid():
+        if user_author.is_staff or user_author == instance.author.user:
+            form.save()
+            return HttpResponseRedirect(reverse('homepage'))
+    else:
+        form = RecipeItemAddForm(instance=instance)
+
+    return render(request, html, {'form': form})
+        
+def login_view(request):
+    html = 'generic_form.html'
+    form = LoginForm()
+
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+
+        if form.is_valid():
+            data = form.cleaned_data
+            if user := authenticate(
+                username=data['username'],
+                password=data['password']
+            ):
+                login(request, user)
+                return HttpResponseRedirect(
+                    request.GET.get('next', '/')
+                )
+    return render(request, html, {'form': form})
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse)('homepage'))
+    return HttpResponseRedirect(reverse('homepage'))
